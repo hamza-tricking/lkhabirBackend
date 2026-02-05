@@ -146,6 +146,37 @@ router.post('/authenticated', auth, async (req, res) => {
   }
 });
 
+// Get recent orders for polling (admin and confirmer only)
+router.get('/recent', auth, async (req, res) => {
+  try {
+    const user = req.user;
+    
+    // Only allow admin and confirmer to poll for recent orders
+    if (user.role !== 'admin' && user.role !== 'confirmer') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    
+    let orders;
+    if (user.role === 'admin') {
+      orders = await Order.find({
+        createdAt: { $gte: fiveMinutesAgo }
+      }).sort({ createdAt: -1 });
+    } else {
+      // Confirmer can only see orders assigned to them
+      orders = await Order.find({
+        'confirmer.currentConfirmer': user._id,
+        createdAt: { $gte: fiveMinutesAgo }
+      }).sort({ createdAt: -1 });
+    }
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get all orders (admin only)
 router.get('/all', auth, async (req, res) => {
   try {
