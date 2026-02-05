@@ -47,6 +47,11 @@ app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running', timestamp: new Date().toISOString() });
 });
 
+// Public orders health check
+app.get('/api/public-orders/health', (req, res) => {
+  res.json({ message: 'Public orders route is working', timestamp: new Date().toISOString() });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

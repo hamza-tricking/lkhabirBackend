@@ -3,6 +3,14 @@ const Order = require('../models/Order');
 
 const router = express.Router();
 
+// Health check for public orders route
+router.get('/health', (req, res) => {
+  res.json({ 
+    message: 'Public orders route is working',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Create new order (public endpoint - no auth required)
 router.post('/', async (req, res) => {
   try {
