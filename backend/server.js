@@ -9,6 +9,7 @@ const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const orderRoutes = require('./routes/orders');
+const publicOrderRoutes = require('./routes/publicOrders');
 
 // Initialize express app
 const app = express();
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/public-orders', publicOrderRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
