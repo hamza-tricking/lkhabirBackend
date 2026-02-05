@@ -1,5 +1,6 @@
 const express = require('express');
 const Order = require('../models/Order');
+const { broadcastNotification } = require('./sse');
 
 const router = express.Router();
 
@@ -47,22 +48,17 @@ router.post('/', async (req, res) => {
 
     await order.save();
 
-    // Emit WebSocket notification for new order
-    const io = req.app.get('io');
-    if (io) {
-      io.emit('notification', {
-        type: 'notification',
-        notification: {
-          id: order._id,
-          type: 'new_order',
-          title: 'طلب جديد',
-          message: `طلب ${type === 'usb' ? 'USB' : 'دورة'} جديد من ${fullName}`,
-          data: order,
-          timestamp: new Date(),
-          read: false
-        }
-      });
-    }
+    // Broadcast SSE notification for new order
+    const notification = {
+      type: 'new_order',
+      title: 'طلب جديد',
+      message: `طلب ${type === 'usb' ? 'USB' : 'دورة'} جديد من ${fullName}`,
+      data: order,
+      timestamp: new Date(),
+      read: false
+    };
+    
+    broadcastNotification(notification);
 
     res.status(201).json({
       message: 'Order created successfully',
