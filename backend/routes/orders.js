@@ -5,9 +5,9 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Debug middleware for all requests to this router
-router.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Headers:`, req.headers);
+// Debug middleware for POST requests only
+router.post('*', (req, res, next) => {
+  console.log(`POST ${req.path} - Headers:`, req.headers);
   console.log('Body:', req.body);
   next();
 });

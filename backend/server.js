@@ -46,6 +46,12 @@ app.post('/api/orders/test', (req, res) => {
   res.json({ message: 'Test route working', body: req.body });
 });
 
+// Completely separate public order route (for testing)
+app.post('/api/public-order', async (req, res) => {
+  console.log('Public order route hit:', req.body);
+  res.json({ message: 'Public order route working', body: req.body });
+});
+
 app.use('/api/orders', orderRoutes);
 
 // Health check route
