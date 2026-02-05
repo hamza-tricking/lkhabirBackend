@@ -5,9 +5,18 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Debug middleware for all requests to this router
+router.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Headers:`, req.headers);
+  console.log('Body:', req.body);
+  next();
+});
+
 // Create new order (public endpoint - no auth required for initial creation)
 router.post('/', async (req, res) => {
   try {
+    console.log('Order creation request received:', req.body);
+    
     const {
       type,
       price,
@@ -17,6 +26,12 @@ router.post('/', async (req, res) => {
       photo,
       description
     } = req.body;
+
+    // Validate required fields
+    if (!type || !price || !phoneNumber || !fullName || !time || !description) {
+      console.log('Missing required fields:', { type, price, phoneNumber, fullName, time, description });
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
 
     // Create new order without confirmer/buyer assignment
     const order = new Order({
@@ -40,6 +55,7 @@ router.post('/', async (req, res) => {
     });
 
     await order.save();
+    console.log('Order created successfully:', order._id);
 
     // Emit WebSocket notification for new order
     const io = req.app.get('io');

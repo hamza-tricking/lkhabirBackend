@@ -45,6 +45,12 @@ app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running', timestamp: new Date().toISOString() });
 });
 
+// Test route for order creation
+app.post('/api/orders/test', (req, res) => {
+  console.log('Test route hit:', req.body);
+  res.json({ message: 'Test route working', body: req.body });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
