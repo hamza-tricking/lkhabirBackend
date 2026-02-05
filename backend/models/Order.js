@@ -1,0 +1,95 @@
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+  // Basic order information
+  type: {
+    type: String,
+    required: true,
+    enum: ['usb', 'course']
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
+  fullName: {
+    type: String,
+    required: true
+  },
+  // Time information
+  time: {
+    day: {
+      type: Date,
+      required: true
+    },
+    hour: {
+      type: String,
+      required: true
+    }
+  },
+  photo: {
+    type: String,
+    default: null
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  
+  // Confirmer part
+  confirmer: {
+    currentConfirmer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    status: {
+      type: String,
+      enum: ['call_confirmed', 'call_not_response', 'phone_closed'],
+      required: true
+    },
+    callAttempts: {
+      type: Number,
+      default: 0
+    },
+    rendezvous: {
+      date: {
+        type: Date
+      },
+      hour: {
+        type: String
+      }
+    },
+    buyer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
+  },
+  
+  // Buyer part
+  buyer: {
+    status: {
+      type: String,
+      enum: ['user_response', 'user_phone_closed', 'retrying'],
+      required: true
+    },
+    isRetrying: {
+      type: Boolean,
+      default: false
+    }
+  }
+}, {
+  timestamps: true
+});
+
+// Index for better query performance
+orderSchema.index({ 'confirmer.currentConfirmer': 1 });
+orderSchema.index({ 'confirmer.buyer': 1 });
+orderSchema.index({ type: 1 });
+orderSchema.index({ 'time.day': 1 });
+
+module.exports = mongoose.model('Order', orderSchema);
