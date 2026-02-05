@@ -15,7 +15,10 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://dmtart.pro/lkhabir'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
