@@ -54,6 +54,12 @@ app.post('/api/public-order', async (req, res) => {
 
 app.use('/api/orders', orderRoutes);
 
+// Simple test route at root
+app.get('/api/test', (req, res) => {
+  console.log('Root test route hit');
+  res.json({ message: 'Server is running!', timestamp: new Date().toISOString() });
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running', timestamp: new Date().toISOString() });
