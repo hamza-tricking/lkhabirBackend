@@ -33,7 +33,9 @@ connectDB();
 // Middleware
 app.use(cors({
   origin: ['http://localhost:3000', 'https://dmtart.pro/lkhabir', 'https://www.lkhabirimmobilier.com'],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control']
 }));
 app.use(express.json());
 

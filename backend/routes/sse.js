@@ -4,15 +4,25 @@ const router = express.Router();
 // Store active SSE connections
 const connections = new Set();
 
+// Handle CORS preflight for SSE
+router.options('/notifications', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Cache-Control, Content-Type');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
+
 // SSE endpoint for real-time notifications
 router.get('/notifications', (req, res) => {
-  // Set SSE headers
+  // Set SSE headers with proper CORS
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Cache-Control'
+    'Access-Control-Allow-Origin': req.headers.origin || '*',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Headers': 'Cache-Control, Content-Type'
   });
 
   // Add connection to active connections
