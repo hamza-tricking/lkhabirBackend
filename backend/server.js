@@ -30,14 +30,22 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://dmtart.pro/lkhabir'],
-  credentials: true
+  origin: ['http://localhost:3000', 'https://dmtart.pro/lkhabir', 'https://dmtart.pro'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Test route for order creation (must be before orderRoutes)
+app.post('/api/orders/test', (req, res) => {
+  console.log('Test route hit:', req.body);
+  res.json({ message: 'Test route working', body: req.body });
+});
+
 app.use('/api/orders', orderRoutes);
 
 // Health check route
@@ -45,10 +53,10 @@ app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running', timestamp: new Date().toISOString() });
 });
 
-// Test route for order creation
-app.post('/api/orders/test', (req, res) => {
-  console.log('Test route hit:', req.body);
-  res.json({ message: 'Test route working', body: req.body });
+// Simple test route
+app.get('/api/orders/test-get', (req, res) => {
+  console.log('GET test route hit');
+  res.json({ message: 'GET test route working' });
 });
 
 // Error handling middleware
