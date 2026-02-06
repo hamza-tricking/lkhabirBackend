@@ -403,6 +403,25 @@ router.get('/buyers', auth, async (req, res) => {
   }
 });
 
+// Get all buyer orders for admin (new endpoint)
+router.get('/buyer-orders', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const orders = await Order.find({ 'confirmer.buyer': { $exists: true } })
+      .populate('confirmer.currentConfirmer', 'username role')
+      .populate('confirmer.buyer', 'username role')
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching buyer orders:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get confirmers for admin
 router.get('/confirmers', auth, async (req, res) => {
   try {
