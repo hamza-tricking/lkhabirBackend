@@ -316,7 +316,8 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     }
 
     if (buyer) {
-      order.buyer = buyer;
+      order.confirmer.buyer = buyer;
+      console.log('Set confirmer buyer:', buyer);
     }
 
     console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));
