@@ -244,11 +244,11 @@ router.get('/buyer', auth, async (req, res) => {
   }
 });
 
-// Update order status (confirmer only)
+// Update order status (confirmer and admin)
 router.put('/:id/confirmer-status', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'confirmer') {
-      return res.status(403).json({ message: 'Confirmer access required' });
+    if (req.user.role !== 'confirmer' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin or Confirmer access required' });
     }
 
     const { status, rendezvous, buyer, callAttempts } = req.body;
