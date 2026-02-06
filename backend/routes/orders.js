@@ -410,7 +410,7 @@ router.get('/buyer-orders', auth, async (req, res) => {
       return res.status(403).json({ message: 'Admin access required' });
     }
 
-    const orders = await Order.find({ 'confirmer.buyer': { $exists: true } })
+    const orders = await Order.find({ 'confirmer.buyer': { $ne: null, $exists: true } })
       .populate('confirmer.currentConfirmer', 'username role')
       .populate('confirmer.buyer', 'username role')
       .sort({ createdAt: -1 });
