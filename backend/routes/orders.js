@@ -410,16 +410,15 @@ router.get('/buyer-orders', auth, async (req, res) => {
       return res.status(403).json({ message: 'Admin access required' });
     }
 
-    // Get orders that have buyer status AND buyer assigned
+    // Get orders that have buyer assigned in confirmer.buyer
     const orders = await Order.find({ 
-      'buyer.status': { $exists: true },
-      'confirmer.buyer': { $ne: null }
+      'confirmer.buyer': { $exists: true, $ne: null }
     })
       .populate('confirmer.currentConfirmer', 'username role')
       .populate('confirmer.buyer', 'username role')
       .sort({ createdAt: -1 });
 
-    console.log('Found orders with buyer status and assigned buyer:', orders.length);
+    console.log('Found orders with buyer assigned in confirmer.buyer:', orders.length);
     console.log('Sample filtered order:', orders[0]);
 
     res.json(orders);
