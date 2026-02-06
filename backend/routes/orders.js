@@ -274,41 +274,18 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       order.confirmer = {};
       console.log('Created confirmer object');
     }
-
-    // For unassigned orders, allow any confirmer to update
-    if (order.confirmer.currentConfirmer && 
-        order.confirmer.currentConfirmer.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to update this order' });
-    }
-
-    // Assign current confirmer if not assigned
-    if (!order.confirmer.currentConfirmer) {
-      order.confirmer.currentConfirmer = req.user._id;
-    }
-
-    // Ensure confirmer object exists and has required fields
-    if (!order.confirmer) {
-      order.confirmer = {};
-    }
     
-    if (!order.confirmer.status) {
-      order.confirmer.status = 'call_not_response';
-    }
-    
-    if (typeof order.confirmer.callAttempts !== 'number') {
-      order.confirmer.callAttempts = 0;
-    }
-
-    // Update confirmer status
+    // Update status
     order.confirmer.status = status;
+    console.log('Updated status to:', status);
     
-    // Use manual call attempts from frontend
-    if (callAttempts !== undefined && callAttempts !== null) {
-      order.confirmer.callAttempts = parseInt(callAttempts);
-      console.log('Updated callAttempts to:', order.confirmer.callAttempts);
-    }
+    // Update callAttempts
+    order.confirmer.callAttempts = callAttempts;
+    console.log('Updated callAttempts to:', callAttempts);
 
+    // Handle rendezvous if provided
     if (rendezvous) {
+      console.log('Processing rendezvous:', rendezvous);
       try {
         // Convert date string to Date object if needed
         if (rendezvous.date && typeof rendezvous.date === 'string') {
