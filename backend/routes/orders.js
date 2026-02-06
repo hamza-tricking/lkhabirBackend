@@ -259,6 +259,14 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    console.log('Order found:', JSON.stringify(order, null, 2));
+
+    // Ensure confirmer object exists
+    if (!order.confirmer) {
+      order.confirmer = {};
+      console.log('Created confirmer object');
+    }
+
     // For unassigned orders, allow any confirmer to update
     if (order.confirmer.currentConfirmer && 
         order.confirmer.currentConfirmer.toString() !== req.user._id.toString()) {
@@ -268,6 +276,19 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     // Assign current confirmer if not assigned
     if (!order.confirmer.currentConfirmer) {
       order.confirmer.currentConfirmer = req.user._id;
+    }
+
+    // Ensure confirmer object exists and has required fields
+    if (!order.confirmer) {
+      order.confirmer = {};
+    }
+    
+    if (!order.confirmer.status) {
+      order.confirmer.status = 'call_not_response';
+    }
+    
+    if (typeof order.confirmer.callAttempts !== 'number') {
+      order.confirmer.callAttempts = 0;
     }
 
     // Update confirmer status
