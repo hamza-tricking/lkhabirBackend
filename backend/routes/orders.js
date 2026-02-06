@@ -486,11 +486,11 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-// Update buyer status (buyer only)
+// Update buyer status (buyer and admin only)
 router.put('/:id/buyer-status', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'buyer') {
-      return res.status(403).json({ message: 'Buyer access required' });
+    if (req.user.role !== 'buyer' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Buyer or Admin access required' });
     }
 
     const { status, isRetrying } = req.body;
@@ -500,10 +500,12 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    if (order.confirmer.buyer.toString() !== req.user._id.toString()) {
+    // If user is buyer, check they own this order
+    if (req.user.role === 'buyer' && order.confirmer.buyer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this order' });
     }
 
+    // Admin can update any buyer order
     order.buyer.status = status;
     if (isRetrying !== undefined) {
       order.buyer.isRetrying = isRetrying;
