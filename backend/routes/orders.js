@@ -299,9 +299,25 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     }
 
     console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));
-    await order.save();
-    await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
+    
+    try {
+      await order.save();
+      console.log('Order saved successfully');
+    } catch (saveError) {
+      console.error('Error saving order:', saveError);
+      return res.status(500).json({ message: 'Error saving order', error: saveError.message });
+    }
+    
+    try {
+      await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
+      console.log('Order populated successfully');
+    } catch (populateError) {
+      console.error('Error populating order:', populateError);
+      return res.status(500).json({ message: 'Error populating order', error: populateError.message });
+    }
 
+    // Temporarily disable SSE notification to debug
+    /*
     // Broadcast SSE notification for order update
     const { broadcastNotification } = require('./sse');
     const notification = {
@@ -314,6 +330,7 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     };
     
     broadcastNotification(notification);
+    */
 
     res.json({
       message: 'Order status updated successfully',
