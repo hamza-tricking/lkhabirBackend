@@ -254,6 +254,7 @@ router.get('/buyer', auth, async (req, res) => {
 
     const orders = await Order.find({ 'confirmer.buyer': req.user._id })
       .populate('confirmer.currentConfirmer', 'username role')
+      .populate('confirmer.buyer', 'username role')
       .sort({ createdAt: -1 });
 
     res.json(orders);
