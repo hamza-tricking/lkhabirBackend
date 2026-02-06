@@ -251,15 +251,22 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       return res.status(403).json({ message: 'Confirmer access required' });
     }
 
-    const { status, rendezvous } = req.body;
+    const { status, rendezvous, buyer } = req.body;
     const order = await Order.findById(req.params.id);
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    if (order.confirmer.currentConfirmer.toString() !== req.user._id.toString()) {
+    // For unassigned orders, allow any confirmer to update
+    if (order.confirmer.currentConfirmer && 
+        order.confirmer.currentConfirmer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this order' });
+    }
+
+    // Assign current confirmer if not assigned
+    if (!order.confirmer.currentConfirmer) {
+      order.confirmer.currentConfirmer = req.user._id;
     }
 
     // Update confirmer status
@@ -273,6 +280,10 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       order.confirmer.rendezvous = rendezvous;
     }
 
+    if (buyer) {
+      order.buyer = buyer;
+    }
+
     await order.save();
     await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
 
@@ -281,6 +292,25 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       order
     });
   } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Get buyers for confirmer (new endpoint)
+router.get('/buyers', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'confirmer') {
+      return res.status(403).json({ message: 'Confirmer access required' });
+    }
+
+    const buyers = await User.find({ role: 'buyer' })
+      .select('username _id')
+      .sort({ username: 1 });
+
+    res.json(buyers);
+  } catch (error) {
+    console.error('Error fetching buyers:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
