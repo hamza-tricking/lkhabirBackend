@@ -415,6 +415,46 @@ router.get('/confirmers', auth, async (req, res) => {
   }
 });
 
+// Delete all orders (admin only)
+router.delete('/', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const result = await Order.deleteMany({});
+    console.log(`Deleted ${result.deletedCount} orders`);
+    
+    res.json({ message: `تم حذف ${result.deletedCount} طلب بنجاح`, deletedCount: result.deletedCount });
+  } catch (error) {
+    console.error('Error deleting all orders:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Delete single order (admin only)
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const order = await Order.findById(req.params.id);
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    await Order.findByIdAndDelete(req.params.id);
+    console.log(`Deleted order: ${req.params.id}`);
+    
+    res.json({ message: 'تم حذف الطلب بنجاح' });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Update buyer status (buyer only)
 router.put('/:id/buyer-status', auth, async (req, res) => {
   try {
