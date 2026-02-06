@@ -272,8 +272,9 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     // Update confirmer status
     order.confirmer.status = status;
     
-    if (status === 'call_not_response') {
-      order.confirmer.callAttempts += 1;
+    // Use manual call attempts from frontend
+    if (callAttempts !== undefined) {
+      order.confirmer.callAttempts = callAttempts;
     }
 
     if (rendezvous) {
