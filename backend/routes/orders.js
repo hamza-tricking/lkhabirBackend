@@ -410,6 +410,26 @@ router.get('/buyer-orders', auth, async (req, res) => {
       return res.status(403).json({ message: 'Admin access required' });
     }
 
+    // First, let's check what we have
+    const allOrders = await Order.find()
+      .populate('confirmer.currentConfirmer', 'username role')
+      .populate('confirmer.buyer', 'username role')
+      .sort({ createdAt: -1 });
+
+    console.log('Total orders:', allOrders.length);
+    
+    // Check each order structure
+    allOrders.forEach((order, index) => {
+      console.log(`Order ${index}:`, {
+        _id: order._id,
+        hasBuyerStatus: !!order.buyer?.status,
+        hasConfirmerBuyer: !!order.confirmer?.buyer,
+        buyerStatus: order.buyer?.status,
+        confirmerBuyerId: order.confirmer?.buyer?._id,
+        confirmerBuyerUsername: order.confirmer?.buyer?.username
+      });
+    });
+
     // Get orders that have buyer status AND buyer assigned
     const orders = await Order.find({ 
       'buyer.status': { $exists: true },
@@ -419,8 +439,8 @@ router.get('/buyer-orders', auth, async (req, res) => {
       .populate('confirmer.buyer', 'username role')
       .sort({ createdAt: -1 });
 
-    console.log('Found orders with buyer status and assigned buyer:', orders.length);
-    console.log('Sample order:', orders[0]);
+    console.log('Filtered orders count:', orders.length);
+    console.log('Sample filtered order:', orders[0]);
 
     res.json(orders);
   } catch (error) {
