@@ -330,6 +330,12 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
 
     console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));
     
+    // Fix existing buyer field if it's a string
+    if (order.confirmer.buyer && typeof order.confirmer.buyer === 'string') {
+      order.confirmer.buyer = new mongoose.Types.ObjectId(order.confirmer.buyer);
+      console.log('Fixed existing buyer field to ObjectId');
+    }
+    
     try {
       console.log('Attempting to save order...');
       await order.save();
