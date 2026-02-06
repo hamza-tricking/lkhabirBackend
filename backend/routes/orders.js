@@ -364,11 +364,11 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
   }
 });
 
-// Get buyers for confirmer (new endpoint)
+// Get buyers for confirmer and admin (new endpoint)
 router.get('/buyers', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'confirmer') {
-      return res.status(403).json({ message: 'Confirmer access required' });
+    if (req.user.role !== 'confirmer' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin or Confirmer access required' });
     }
 
     const buyers = await User.find({ role: 'buyer' })
