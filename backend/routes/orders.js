@@ -247,6 +247,7 @@ router.get('/buyer', auth, async (req, res) => {
 // Update order status (confirmer and admin)
 router.put('/:id/confirmer-status', auth, async (req, res) => {
   try {
+    console.log('Full user object:', JSON.stringify(req.user, null, 2)); // Debug log
     console.log('User role:', req.user.role); // Debug log
     if (req.user.role !== 'confirmer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Admin or Confirmer access required' });
