@@ -392,6 +392,24 @@ router.get('/buyers', auth, async (req, res) => {
   }
 });
 
+// Get confirmers for admin
+router.get('/confirmers', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    const confirmers = await User.find({ role: 'confirmer' })
+      .select('username _id')
+      .sort({ username: 1 });
+
+    res.json(confirmers);
+  } catch (error) {
+    console.error('Error fetching confirmers:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Update buyer status (buyer only)
 router.put('/:id/buyer-status', auth, async (req, res) => {
   try {

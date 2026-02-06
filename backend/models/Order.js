@@ -75,7 +75,8 @@ const orderSchema = new mongoose.Schema({
     status: {
       type: String,
       enum: ['user_response', 'user_phone_closed', 'retrying'],
-      required: true
+      required: true,
+      default: 'not_processed_yet'
     },
     isRetrying: {
       type: Boolean,
