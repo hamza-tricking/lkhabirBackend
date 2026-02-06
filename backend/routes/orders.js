@@ -428,16 +428,24 @@ router.get('/buyer-orders', auth, async (req, res) => {
   }
 });
 
-// Get confirmers for admin
+// Get confirmers for admin and confirmer
 router.get('/confirmers', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Admin access required' });
+    let confirmers;
+    
+    if (req.user.role === 'admin') {
+      // Admin can see all confirmers
+      confirmers = await User.find({ role: 'confirmer' })
+        .select('username _id')
+        .sort({ username: 1 });
+    } else if (req.user.role === 'confirmer') {
+      // Confirmer can only see themselves
+      confirmers = await User.find({ _id: req.user._id, role: 'confirmer' })
+        .select('username _id')
+        .sort({ username: 1 });
+    } else {
+      return res.status(403).json({ message: 'Admin or Confirmer access required' });
     }
-
-    const confirmers = await User.find({ role: 'confirmer' })
-      .select('username _id')
-      .sort({ username: 1 });
 
     res.json(confirmers);
   } catch (error) {
