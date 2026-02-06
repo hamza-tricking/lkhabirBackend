@@ -410,15 +410,16 @@ router.get('/buyer-orders', auth, async (req, res) => {
       return res.status(403).json({ message: 'Admin access required' });
     }
 
-    // Get orders that have buyer status (meaning they were processed by buyers)
+    // Get orders that have buyer status AND buyer assigned
     const orders = await Order.find({ 
-      'buyer.status': { $exists: true }
+      'buyer.status': { $exists: true },
+      'confirmer.buyer': { $exists: true, $ne: null }
     })
       .populate('confirmer.currentConfirmer', 'username role')
       .populate('confirmer.buyer', 'username role')
       .sort({ createdAt: -1 });
 
-    console.log('Found orders with buyer status:', orders.length);
+    console.log('Found orders with buyer status and assigned buyer:', orders.length);
     console.log('Sample order:', orders[0]);
 
     res.json(orders);
