@@ -433,14 +433,9 @@ router.get('/confirmers', auth, async (req, res) => {
   try {
     let confirmers;
     
-    if (req.user.role === 'admin') {
-      // Admin can see all confirmers
+    if (req.user.role === 'admin' || req.user.role === 'confirmer') {
+      // Admin and confirmer can see all confirmers
       confirmers = await User.find({ role: 'confirmer' })
-        .select('username _id')
-        .sort({ username: 1 });
-    } else if (req.user.role === 'confirmer') {
-      // Confirmer can only see themselves
-      confirmers = await User.find({ _id: req.user._id, role: 'confirmer' })
         .select('username _id')
         .sort({ username: 1 });
     } else {
