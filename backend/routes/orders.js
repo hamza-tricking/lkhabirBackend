@@ -325,11 +325,12 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));
     
     try {
+      console.log('Attempting to save order...');
       await order.save();
       console.log('Order saved successfully');
     } catch (saveError) {
       console.error('Error saving order:', saveError);
-      return res.status(500).json({ message: 'Error saving order', error: saveError.message });
+      return res.status(500).json({ message: 'Server error', error: saveError.message });
     }
     
     try {
