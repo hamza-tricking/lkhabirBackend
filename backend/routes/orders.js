@@ -178,6 +178,23 @@ router.get('/recent', auth, async (req, res) => {
   }
 });
 
+// Get all orders for confirmer (both assigned and unassigned)
+router.get('/confirmer-all', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'confirmer' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Confirmer or Admin access required' });
+    }
+
+    const orders = await Order.find()
+      .populate('confirmer.currentConfirmer confirmer.buyer', 'username role')
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get all orders (admin only)
 router.get('/all', auth, async (req, res) => {
   try {
