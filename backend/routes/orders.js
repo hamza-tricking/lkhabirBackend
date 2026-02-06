@@ -278,8 +278,8 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       return res.status(403).json({ message: 'Admin or Confirmer access required' });
     }
 
-    const { status, rendezvous, buyer, currentConfirmer, callAttempts } = req.body;
-    console.log('Received update data:', { status, rendezvous, buyer, currentConfirmer, callAttempts });
+    const { status, rendezvous, buyer, currentConfirmer, callAttempts, additionalNotes } = req.body;
+    console.log('Received update data:', { status, rendezvous, buyer, currentConfirmer, callAttempts, additionalNotes });
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -327,6 +327,11 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     if (currentConfirmer) {
       order.confirmer.currentConfirmer = new mongoose.Types.ObjectId(currentConfirmer);
       console.log('Set current confirmer:', currentConfirmer);
+    }
+
+    if (additionalNotes) {
+      order.additionalNotes = additionalNotes;
+      console.log('Set additional notes:', additionalNotes);
     }
 
     console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));

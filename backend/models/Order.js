@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  additionalNotes: {
+    type: String,
+    default: null
+  },
   
   // Confirmer part
   confirmer: {
