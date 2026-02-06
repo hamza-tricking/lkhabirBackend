@@ -244,6 +244,12 @@ router.get('/buyer', auth, async (req, res) => {
   }
 });
 
+// Test endpoint to verify PUT requests work
+router.put('/test', auth, (req, res) => {
+  console.log('TEST ENDPOINT HIT - PUT requests are working');
+  res.json({ message: 'PUT test successful', user: req.user });
+});
+
 // Update order status (confirmer and admin)
 router.put('/:id/confirmer-status', auth, async (req, res) => {
   try {
