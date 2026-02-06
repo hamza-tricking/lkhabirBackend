@@ -280,7 +280,18 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     }
 
     if (rendezvous) {
-      order.confirmer.rendezvous = rendezvous;
+      try {
+        // Convert date string to Date object if needed
+        if (rendezvous.date && typeof rendezvous.date === 'string') {
+          rendezvous.date = new Date(rendezvous.date);
+          console.log('Converted rendezvous date:', rendezvous.date);
+        }
+        order.confirmer.rendezvous = rendezvous;
+        console.log('Set rendezvous:', order.confirmer.rendezvous);
+      } catch (error) {
+        console.error('Error processing rendezvous:', error);
+        return res.status(400).json({ message: 'Invalid rendezvous date format' });
+      }
     }
 
     if (buyer) {
