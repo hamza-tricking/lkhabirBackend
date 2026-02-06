@@ -287,6 +287,19 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     await order.save();
     await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
 
+    // Broadcast SSE notification for order update
+    const { broadcastNotification } = require('./sse');
+    const notification = {
+      type: 'order_updated',
+      title: 'تم تحديث حالة الطلب',
+      message: `تم تحديث حالة طلب ${order.fullName} إلى ${status}`,
+      data: order,
+      timestamp: new Date(),
+      read: false
+    };
+    
+    broadcastNotification(notification);
+
     res.json({
       message: 'Order status updated successfully',
       order
