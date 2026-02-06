@@ -211,6 +211,22 @@ router.get('/confirmer', auth, async (req, res) => {
   }
 });
 
+// Get unassigned orders for confirmers
+router.get('/unassigned', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'confirmer') {
+      return res.status(403).json({ message: 'Confirmer access required' });
+    }
+
+    const orders = await Order.find({ 'confirmer.currentConfirmer': null })
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get orders for buyer
 router.get('/buyer', auth, async (req, res) => {
   try {
