@@ -251,7 +251,8 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       return res.status(403).json({ message: 'Confirmer access required' });
     }
 
-    const { status, rendezvous, buyer } = req.body;
+    const { status, rendezvous, buyer, callAttempts } = req.body;
+    console.log('Received update data:', { status, rendezvous, buyer, callAttempts });
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -273,8 +274,9 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
     order.confirmer.status = status;
     
     // Use manual call attempts from frontend
-    if (callAttempts !== undefined) {
-      order.confirmer.callAttempts = callAttempts;
+    if (callAttempts !== undefined && callAttempts !== null) {
+      order.confirmer.callAttempts = parseInt(callAttempts);
+      console.log('Updated callAttempts to:', order.confirmer.callAttempts);
     }
 
     if (rendezvous) {
@@ -285,6 +287,7 @@ router.put('/:id/confirmer-status', auth, async (req, res) => {
       order.buyer = buyer;
     }
 
+    console.log('Order before save:', JSON.stringify(order.confirmer, null, 2));
     await order.save();
     await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
 
