@@ -85,6 +85,33 @@ const orderSchema = new mongoose.Schema({
     isRetrying: {
       type: Boolean,
       default: false
+    },
+    buyerResponse: {
+      type: String,
+      enum: ['sold', 'interested_later', 'not_sold'],
+      required: false
+    },
+    paymentMethod: {
+      type: String,
+      enum: ['online_payment', 'cash_on_delivery'],
+      required: false
+    },
+    reasonNotSold: {
+      type: String,
+      enum: ['price_high', 'needs_time', 'afraid_scam', 'not_interested', 'no_decision', 'other'],
+      required: false
+    },
+    customReason: {
+      type: String,
+      required: false
+    },
+    followUpDate: {
+      type: Date,
+      required: false
+    },
+    followUpTime: {
+      type: String,
+      required: false
     }
   }
 }, {

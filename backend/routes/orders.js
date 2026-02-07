@@ -498,7 +498,16 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
       return res.status(403).json({ message: 'Buyer or Admin access required' });
     }
 
-    const { status, isRetrying } = req.body;
+    const { 
+      status, 
+      isRetrying, 
+      buyerResponse, 
+      paymentMethod, 
+      reasonNotSold, 
+      customReason, 
+      followUpDate, 
+      followUpTime 
+    } = req.body;
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -515,6 +524,24 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
     if (isRetrying !== undefined) {
       order.buyer.isRetrying = isRetrying;
     }
+    if (buyerResponse) {
+      order.buyer.buyerResponse = buyerResponse;
+    }
+    if (paymentMethod) {
+      order.buyer.paymentMethod = paymentMethod;
+    }
+    if (reasonNotSold) {
+      order.buyer.reasonNotSold = reasonNotSold;
+    }
+    if (customReason) {
+      order.buyer.customReason = customReason;
+    }
+    if (followUpDate) {
+      order.buyer.followUpDate = new Date(followUpDate);
+    }
+    if (followUpTime) {
+      order.buyer.followUpTime = followUpTime;
+    }
 
     await order.save();
     await order.populate('confirmer.currentConfirmer confirmer.buyer', 'username role');
@@ -524,6 +551,7 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
       order
     });
   } catch (error) {
+    console.error('Error updating buyer status:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
