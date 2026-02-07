@@ -78,7 +78,7 @@ const orderSchema = new mongoose.Schema({
   buyer: {
     status: {
       type: String,
-      enum: ['user_response', 'user_phone_closed', 'retrying'],
+      enum: ['not_processed_yet', 'user_response', 'user_phone_closed', 'retrying'],
       required: true,
       default: 'not_processed_yet'
     },
