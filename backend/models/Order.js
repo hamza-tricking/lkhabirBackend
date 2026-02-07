@@ -82,9 +82,9 @@ const orderSchema = new mongoose.Schema({
       required: true,
       default: 'not_processed_yet'
     },
-    isRetrying: {
-      type: Boolean,
-      default: false
+    callAttemptsBuyer: {
+      type: Number,
+      default: 0
     },
     buyerResponse: {
       type: String,
@@ -112,6 +112,22 @@ const orderSchema = new mongoose.Schema({
     followUpTime: {
       type: String,
       required: false
+    },
+    addressConfirmation: {
+      type: String,
+      required: false
+    },
+    amountPaid: {
+      type: Number,
+      required: false
+    },
+    remainingAmount: {
+      type: Number,
+      required: false
+    },
+    isFullyPaid: {
+      type: Boolean,
+      default: false
     }
   }
 }, {

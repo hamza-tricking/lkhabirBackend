@@ -500,13 +500,17 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
 
     const { 
       status, 
-      isRetrying, 
+      callAttemptsBuyer, 
       buyerResponse, 
       paymentMethod, 
       reasonNotSold, 
       customReason, 
       followUpDate, 
-      followUpTime 
+      followUpTime,
+      addressConfirmation,
+      amountPaid,
+      remainingAmount,
+      isFullyPaid
     } = req.body;
     const order = await Order.findById(req.params.id);
 
@@ -521,8 +525,8 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
 
     // Admin can update any buyer order
     order.buyer.status = status;
-    if (isRetrying !== undefined) {
-      order.buyer.isRetrying = isRetrying;
+    if (callAttemptsBuyer !== undefined) {
+      order.buyer.callAttemptsBuyer = callAttemptsBuyer;
     }
     if (buyerResponse) {
       order.buyer.buyerResponse = buyerResponse;
@@ -541,6 +545,18 @@ router.put('/:id/buyer-status', auth, async (req, res) => {
     }
     if (followUpTime) {
       order.buyer.followUpTime = followUpTime;
+    }
+    if (addressConfirmation) {
+      order.buyer.addressConfirmation = addressConfirmation;
+    }
+    if (amountPaid !== undefined) {
+      order.buyer.amountPaid = amountPaid;
+    }
+    if (remainingAmount !== undefined) {
+      order.buyer.remainingAmount = remainingAmount;
+    }
+    if (isFullyPaid !== undefined) {
+      order.buyer.isFullyPaid = isFullyPaid;
     }
 
     await order.save();
