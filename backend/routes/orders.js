@@ -258,6 +258,8 @@ router.get('/buyer', auth, async (req, res) => {
       .sort({ createdAt: -1 });
 
     res.json(orders);
+
+    console.log(orders);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
