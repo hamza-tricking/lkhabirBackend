@@ -491,11 +491,11 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-// Update buyer status (buyer and admin only)
+// Update buyer status (buyer, admin, and confirmer only)
 router.put('/:id/buyer-status', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'buyer' && req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Buyer or Admin access required' });
+    if (req.user.role !== 'buyer' && req.user.role !== 'admin' && req.user.role !== 'confirmer') {
+      return res.status(403).json({ message: 'Buyer, Admin, or Confirmer access required' });
     }
 
     const { 
