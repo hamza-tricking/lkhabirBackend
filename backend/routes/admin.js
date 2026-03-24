@@ -115,6 +115,35 @@ router.delete('/users/:id', adminAuth, async (req, res) => {
   }
 });
 
+// Update user unlocked sections (admin only)
+router.put('/users/:id/unlocked-sections', adminAuth, async (req, res) => {
+  try {
+    const { unlockedSections } = req.body;
+    
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Validate unlocked sections
+    const validSections = ['المستوى الأول: أساسيات العقارات', 'قسم التسويق العقاري', 'الدورة المكثفة'];
+    if (!Array.isArray(unlockedSections) || !unlockedSections.every(section => validSections.includes(section))) {
+      return res.status(400).json({ message: 'Invalid unlocked sections' });
+    }
+
+    // Update unlocked sections
+    user.unlockedSections = unlockedSections;
+    await user.save();
+
+    res.json({
+      message: 'User unlocked sections updated successfully',
+      user
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Get users by role (admin only)
 router.get('/users/role/:role', adminAuth, async (req, res) => {
   try {

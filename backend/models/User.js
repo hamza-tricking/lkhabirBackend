@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     default: null
+  },
+  unlockedSections: {
+    type: [String],
+    default: ['الدورة المكثفة'],
+    enum: ['المستوى الأول: أساسيات العقارات', 'قسم التسويق العقاري', 'الدورة المكثفة']
   }
 }, {
   timestamps: true
