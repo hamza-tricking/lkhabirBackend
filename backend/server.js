@@ -19,7 +19,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://dmtart.pro/lkhabir'],
+    origin: false, // Let Express handle CORS
     methods: ['GET', 'POST']
   }
 });
