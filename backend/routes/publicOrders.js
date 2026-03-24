@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
     const notification = {
       type: 'new_order',
       title: 'طلب جديد',
-      message: `طلب ${type === 'usb' ? 'USB' : 'دورة'} جديد من ${fullName}`,
+      message: `طلب ${type} جديد من ${fullName}`,
       data: order,
       timestamp: new Date(),
       read: false

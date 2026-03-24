@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['usb', 'course', 'challenge']
+    enum: ['usb', 'course', 'challenge', 'دورة مكثفة']
   },
   price: {
     type: Number,
