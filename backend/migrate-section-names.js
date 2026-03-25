@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const User = require('../models/User');
+const User = require('./models/User');
 
 // Connect to database
 require('dotenv').config();
-const connectDB = require('../config/database');
+const connectDB = require('./config/database');
 
 async function migrateSectionNames() {
   try {
