@@ -120,10 +120,15 @@ router.put('/users/:id/unlocked-sections', adminAuth, async (req, res) => {
   try {
     const { unlockedSections } = req.body;
     
+    console.log('Request body:', req.body);
+    console.log('unlockedSections received:', unlockedSections);
+    
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    console.log('Current user unlockedSections:', user.unlockedSections);
 
     // Validate unlocked sections
     const validSections = [
@@ -132,8 +137,18 @@ router.put('/users/:id/unlocked-sections', adminAuth, async (req, res) => {
       'الدورة المكثفة', 
       'البيع العقاري'
     ];
-    if (!Array.isArray(unlockedSections) || !unlockedSections.every(section => validSections.includes(section))) {
-      return res.status(400).json({ message: 'Invalid unlocked sections' });
+    
+    console.log('Valid sections:', validSections);
+    
+    if (!Array.isArray(unlockedSections)) {
+      console.log('Error: unlockedSections is not an array');
+      return res.status(400).json({ message: 'Invalid unlocked sections - not an array' });
+    }
+    
+    const invalidSections = unlockedSections.filter(section => !validSections.includes(section));
+    if (invalidSections.length > 0) {
+      console.log('Invalid sections found:', invalidSections);
+      return res.status(400).json({ message: 'Invalid unlocked sections', invalidSections });
     }
 
     // Update unlocked sections
