@@ -126,7 +126,7 @@ router.put('/users/:id/unlocked-sections', adminAuth, async (req, res) => {
     }
 
     // Validate unlocked sections
-    const validSections = ['المستوى الأول: أساسيات العقارات', 'قسم التسويق العقاري', 'الدورة المكثفة'];
+    const validSections = ['القانون العقاري', 'قسم التسويق العقاري', 'الدورة المكثفة'];
     if (!Array.isArray(unlockedSections) || !unlockedSections.every(section => validSections.includes(section))) {
       return res.status(400).json({ message: 'Invalid unlocked sections' });
     }
