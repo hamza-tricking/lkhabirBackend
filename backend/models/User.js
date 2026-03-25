@@ -26,7 +26,12 @@ const userSchema = new mongoose.Schema({
   unlockedSections: {
     type: [String],
     default: ['الدورة المكثفة'],
-    enum: ['القانون العقاري', 'قسم التسويق العقاري', 'الدورة المكثفة', 'البيع العقاري']
+    enum: [
+      'القانون العقاري', 
+      'قسم التسويق العقاري', 
+      'الدورة المكثفة', 
+      'البيع العقاري'
+    ]
   }
 }, {
   timestamps: true
