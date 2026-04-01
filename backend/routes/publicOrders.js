@@ -1,5 +1,6 @@
 const express = require('express');
 const Order = require('../models/Order');
+const History = require('../models/History');
 const { broadcastNotification } = require('./sse');
 
 const router = express.Router();
@@ -22,7 +23,10 @@ router.post('/', async (req, res) => {
       fullName,
       time,
       photo,
-      description
+      description,
+      email,
+      willaya,
+      city
     } = req.body;
 
     // Create new order without confirmer/buyer assignment
@@ -48,6 +52,29 @@ router.post('/', async (req, res) => {
 
     await order.save();
 
+    // Create history record with all order information
+    const historyInformation = {
+      fullName,
+      phoneNumber,
+      email,
+      willaya,
+      city,
+      price,
+      type,
+      time,
+      description,
+      photo,
+      createdAt: order.createdAt
+    };
+
+    const history = new History({
+      information: JSON.stringify(historyInformation),
+      type,
+      orderId: order._id
+    });
+
+    await history.save();
+
     // Broadcast SSE notification for new order
     const notification = {
       type: 'new_order',
@@ -62,9 +89,11 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({
       message: 'Order created successfully',
-      order
+      order,
+      history
     });
   } catch (error) {
+    console.error('Order creation error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

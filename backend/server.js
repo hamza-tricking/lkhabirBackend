@@ -11,6 +11,7 @@ const adminRoutes = require('./routes/admin');
 const orderRoutes = require('./routes/orders');
 const publicOrderRoutes = require('./routes/publicOrders');
 const sseRoutes = require('./routes/sse');
+const historyRoutes = require('./routes/history');
 
 // Initialize express app
 const app = express();
@@ -45,6 +46,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/public-orders', publicOrderRoutes);
 app.use('/api/sse', sseRoutes);
+app.use('/api/history', historyRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
