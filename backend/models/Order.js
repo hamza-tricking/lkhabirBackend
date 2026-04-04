@@ -19,6 +19,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  personType: {
+    type: String,
+    enum: ['وسيط عقاري', 'مبتدئ', 'موظف', 'امرأة رائدة'],
+    required: false
+  },
   // Time information
   time: {
     day: {
