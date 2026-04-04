@@ -24,6 +24,14 @@ const orderSchema = new mongoose.Schema({
     enum: ['وسيط عقاري', 'مبتدئ', 'موظف', 'امرأة رائدة'],
     required: false
   },
+  willaya: {
+    type: String,
+    required: false
+  },
+  city: {
+    type: String,
+    required: false
+  },
   // Time information
   time: {
     day: {

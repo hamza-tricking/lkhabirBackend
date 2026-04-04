@@ -37,6 +37,8 @@ router.post('/', async (req, res) => {
       phoneNumber,
       fullName,
       personType,
+      willaya,
+      city,
       time,
       photo,
       description,
