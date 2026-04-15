@@ -1,0 +1,3 @@
+ { username: 'client1', password: 'password123', role: 'client' },
+  { username: 'confirmer1', password: 'password123', role: 'confirmer' },
+  { username: 'buyer1', password: 'password123', role: 'buyer' }

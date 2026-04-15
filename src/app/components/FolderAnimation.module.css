@@ -1,0 +1,215 @@
+/* Folder Container */
+.folder-container {
+  width: 400px;
+  height: 400px;
+  padding-top: 80px;
+  margin: 0 auto;
+  background: radial-gradient(circle, #C69C6D, #634D2E);
+  box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.4);
+  position: relative;
+  border-radius: 10px;
+}
+
+/* Folder Base */
+.folder {
+  width: 120px;
+  height: 110px;
+  background: url('https://res.cloudinary.com/dicpjm1dz/image/upload/v1769203183/aaa_tincm0.png') center/cover no-repeat, #634D2E;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+
+.folder::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 100px;
+  background: url('/aaa.png') center/contain no-repeat, #ffc170;
+  position: absolute;
+  left: 0px;
+  top: 10px;
+  border-radius: 6px;
+  z-index: 5;
+  box-shadow: 3px -3px 5px rgba(0, 0, 0, 0.5);
+}
+
+.folder::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background: #B38B4D;
+  position: absolute;
+  top: -8px;
+  left: 0;
+  z-index: 1;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+/* Pages */
+.page {
+  width: 90px;
+  height: 100px;
+  background: linear-gradient(135deg, #f0d3a9 0%, #ffe0b8 50%, #ffc170 100%);
+  position: absolute;
+  z-index: 2;
+  left: 15px;
+  top: 0px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+  font-family: helvetica;
+  text-align: center;
+}
+
+.page1 {
+  z-index: 3;
+}
+
+.page2 {
+  background: white;
+}
+
+.page3 {
+  background: white;
+}
+
+/* Page Animations */
+@keyframes page1Movement {
+  0% {
+    top: 0;
+    transform: rotate(0deg);
+  }
+  40% {
+    top: -120px;
+    transform: rotate(0deg);
+  }
+  60% {
+    top: -120px;
+    left: 15px;
+    transform: rotate(5deg);
+  }
+  61% {
+    top: -120px;
+    left: 15px;
+    z-index: 3;
+    transform: rotate(5deg);
+  }
+  80% {
+    top: -120px;
+    left: -80px;
+    transform: rotate(-10deg);
+  }
+  100% {
+    top: -120px;
+    left: -80px;
+    transform: rotate(-15deg);
+  }
+}
+
+@keyframes page2Movement {
+  0% {
+    top: 0;
+    transform: rotate(0deg);
+  }
+  40% {
+    top: -120px;
+    transform: rotate(0deg);
+  }
+  61% {
+    top: -120px;
+    z-index: 2;
+    transform: rotate(0deg);
+  }
+  70% {
+    top: -120px;
+    left: 15px;
+    transform: rotate(8deg);
+  }
+  100% {
+    top: -120px;
+    left: 15px;
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes page3Movement {
+  0% {
+    top: 0;
+    transform: rotate(0deg);
+  }
+  40% {
+    top: -120px;
+    transform: rotate(0deg);
+  }
+  60% {
+    top: -120px;
+    left: 15px;
+    transform: rotate(-5deg);
+  }
+  61% {
+    top: -120px;
+    left: 15px;
+    z-index: 1;
+    transform: rotate(-5deg);
+  }
+  80% {
+    top: -120px;
+    left: 110px;
+    transform: rotate(-8deg);
+  }
+  100% {
+    top: -120px;
+    left: 110px;
+    transform: rotate(-12deg);
+  }
+}
+
+/* Hover Effects */
+.folder:hover .page1 {
+  animation: page1Movement 1.5s linear infinite alternate;
+}
+
+.folder:hover .page2 {
+  animation: page2Movement 1.5s linear infinite alternate;
+}
+
+.folder:hover .page3 {
+  animation: page3Movement 1.5s linear infinite alternate;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .folder-container {
+    width: 300px;
+    height: 300px;
+    padding-top: 60px;
+  }
+  
+  .folder {
+    width: 90px;
+    height: 82px;
+    left: 105px;
+    top: 150px;
+  }
+  
+  .folder::before {
+    width: 90px;
+    height: 75px;
+    top: 7px;
+  }
+  
+  .folder::after {
+    width: 45px;
+    height: 15px;
+    top: -6px;
+  }
+  
+  .page {
+    width: 67px;
+    height: 75px;
+    left: 11px;
+  }
+}
